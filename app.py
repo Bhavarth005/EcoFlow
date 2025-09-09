@@ -1,3 +1,8 @@
+import os
+
+os.system('pip install --upgrade pip')
+os.system('pip install streamlit geopandas lightgbm pandas numpy shapely')
+
 import streamlit as st
 import geopandas as gpd
 import numpy as np
