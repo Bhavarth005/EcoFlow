@@ -40,20 +40,11 @@ def load_data():
 
     return zones, roads
 
-
-# Get current time in IST for default time input value
-default_time = datetime.datetime.now(ist).time()
-
-# Sidebar time input with IST default
-user_time = st.sidebar.time_input("Select prediction time (IST)", value=default_time, key="prediction_time")
-
-# Convert to string "HH:MM:SS" for the subprocess call
-time_str = user_time.strftime("%H:%M:%S")
-
 # On first load, run congestion prediction with selected IST time
 if 'congestion_loaded' not in st.session_state:
-    with st.spinner(f"Running congestion prediction for {time_str} IST..."):
-        success = run_congestion_prediction(time_str)
+    current_time_str = datetime.datetime.now(ist).strftime("%H:%M:%S")
+    with st.spinner(f"Running congestion prediction for {current_time_str} IST..."):
+        success = run_congestion_prediction(current_time_str)
         if success:
             st.session_state.congestion_loaded = True
         else:
@@ -67,9 +58,9 @@ else:
 
 # Button to run congestion prediction on demand with selected IST time
 if st.sidebar.button("Run Congestion Prediction", key='run_pred_button'):
-    time_str = st.session_state.prediction_time.strftime("%H:%M:%S")
-    with st.spinner(f"Running congestion prediction for {time_str} IST..."):
-        success = run_congestion_prediction(time_str)
+    current_time_str = datetime.datetime.now(ist).strftime("%H:%M:%S")
+    with st.spinner(f"Running congestion prediction for {current_time_str} IST..."):
+        success = run_congestion_prediction(current_time_str)
         if success:
             zones_gdf, roads_gdf = load_data()
             st.success("Congestion prediction updated.")
